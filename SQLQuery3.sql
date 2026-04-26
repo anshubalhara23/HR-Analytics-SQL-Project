@@ -97,12 +97,24 @@ where Training_Cost>avgCost;
 --HR Analytics
 --1. Attrition Analysis
 
-select
-TerminationType,
-count(*) as total
-from employees
-group by TerminationType
-order by total desc
+SELECT
+    CASE
+        WHEN TerminationType IN ('Voluntary', 'Resignation') THEN 'Voluntary'
+        WHEN TerminationType = 'Involuntary' THEN 'Involuntary'
+        WHEN TerminationType = 'Retirement' THEN 'Retirement'
+        ELSE 'Unknown'
+    END AS CleanTerminationType,
+    COUNT(*) AS Total
+FROM Employees
+WHERE EmployeeStatus = 'Terminated'
+GROUP BY
+    CASE
+        WHEN TerminationType IN ('Voluntary', 'Resignation') THEN 'Voluntary'
+        WHEN TerminationType = 'Involuntary' THEN 'Involuntary'
+        WHEN TerminationType = 'Retirement' THEN 'Retirement'
+        ELSE 'Unknown'
+    END
+ORDER BY Total DESC;
 
 --2. Average Tenure of Employees
 
